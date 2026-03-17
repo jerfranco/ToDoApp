@@ -24,12 +24,12 @@ submitButton.addEventListener('click', function() {
     },
     body: JSON.stringify(task)
   })
-  
+
   // Clearing input field after task submits
   .then( () => {
     inputElement.value = "";
+    displayTasks();
   })
-  
 })
 
 const displayTasks = () => {
@@ -44,8 +44,21 @@ const displayTasks = () => {
   
   .then(data => data.forEach(element => {
     const li = document.createElement('li');
+    const button = document.createElement('button')
     li.textContent = element.title;
+    li.appendChild(button);
+    button.textContent = "delete";
     displayTaskItems.appendChild(li);
+    
+    button.addEventListener('click', function () {
+      fetch(`http://localhost:8080/tasks/${element.id}`, {
+        method: "DELETE",
+      })
+      .then(
+        li.remove()
+      )
+    })
+
   }));
 
   
